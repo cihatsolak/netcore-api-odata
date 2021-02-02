@@ -1,10 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.Mvc;
+using OData.API.Models;
 
 namespace OData.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : ODataController
     {
+        private readonly AppDbContext _dbContext;
+        public ProductsController(AppDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        [EnableQuery]
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok(_dbContext.Products);
+        }
     }
 }

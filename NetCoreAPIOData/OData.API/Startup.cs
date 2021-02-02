@@ -46,7 +46,7 @@ namespace OData.API
             //builder.EntitySet<EntityName>("ControllerName");
             //[entity set name]Controller
             builder.EntitySet<Category>("Categories");
-            builder.EntitySet<Product>("Vehicles");
+            builder.EntitySet<Product>("Products");
 
 
             if (env.IsDevelopment())

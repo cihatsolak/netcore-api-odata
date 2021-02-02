@@ -13,8 +13,8 @@ namespace OData.API.Controllers
         }
 
         [EnableQuery]
-        [HttpGet(nameof(List))]
-        public IActionResult List()
+        [HttpGet]
+        public IActionResult Get()
         {
             return Ok(_dbContext.Categories);
         }
