@@ -1,3 +1,5 @@
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,12 +34,21 @@ namespace OData.API
                 options.UseSqlServer(Configuration.GetConnectionString("Default"));
             });
 
+            services.AddOData(); //OData Eklenmesi
             services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var builder = new ODataConventionModelBuilder();
+
+            //builder.EntitySet<EntityName>("ControllerName");
+            //[entity set name]Controller
+            builder.EntitySet<Category>("Categories");
+            builder.EntitySet<Product>("Vehicles");
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -51,6 +62,7 @@ namespace OData.API
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapODataRoute("odata", "odata", builder.GetEdmModel());
                 endpoints.MapControllers();
             });
         }
