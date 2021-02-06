@@ -62,6 +62,13 @@ namespace OData.API
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.Select()
+                         .Expand()
+                         .OrderBy()
+                         .MaxTop(null)
+                         .Count()
+                         .Filter(); //OData'ya select, expand, orderby kullanýlacaðýný bildiriyoruz.
+                
                 endpoints.MapODataRoute("odata", "odata", builder.GetEdmModel());
                 endpoints.MapControllers();
             });
