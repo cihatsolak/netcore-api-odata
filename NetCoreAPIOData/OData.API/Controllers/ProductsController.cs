@@ -1,9 +1,14 @@
 ﻿using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OData.API.Models;
+using System.Linq;
 
 namespace OData.API.Controllers
 {
+    [ODataRoutePrefix("Products")]
     public class ProductsController : ODataController
     {
         private readonly AppDbContext _dbContext;
@@ -12,11 +17,73 @@ namespace OData.API.Controllers
             _dbContext = dbContext;
         }
 
-        [EnableQuery]
+        //[EnableQuery]
+        [EnableQuery(PageSize = 2, AllowedLogicalOperators = AllowedLogicalOperators.And)]
         [HttpGet]
         public IActionResult Get()
         {
+            /*
+             * DbSet : IQueryable<>
+             * ToList(): IEnumarable<>
+             */
             return Ok(_dbContext.Products);
+        }
+
+        //[ODataRoute("Products({id})")]
+        [ODataRoute("({id})")]
+        [EnableQuery]
+        [HttpGet]
+        public IActionResult GetProductById([FromODataUri] int id)
+        {
+            //Url -> [FromODataUri]
+            //Where -> IQueryable
+
+            return Ok(_dbContext.Products.Where(p => p.Id == id));
+        }
+
+        //[EnableQuery]
+        //[HttpGet]
+        //public IActionResult Get([FromODataUri] int key) //Key zorunlu
+        //{
+        //    //Url -> [FromODataUri]
+        //    //Where -> IQueryable
+
+        //    return Ok(_dbContext.Products.Where(p => p.Id == key));
+        //}
+
+        [ODataRoute("")]
+        [HttpPost]
+        public IActionResult Post([FromBody] Product product) //isimlendirme önemli. (product)
+        {
+            _dbContext.Products.Add(product);
+            _dbContext.SaveChanges();
+
+            return Created<Product>(product);  // <!-- Best Practices -->
+        }
+
+        [HttpPut]
+        public IActionResult Put([FromODataUri] int key, [FromBody] Product product) //isimlendirme önemli. (key),(product)
+        {
+            product.Id = key;
+
+            _dbContext.Entry(product).State = EntityState.Modified;
+            _dbContext.SaveChanges();
+
+            return NoContent(); // <!-- Best Practices -->
+        }
+
+        [ODataRoute("({id})")]
+        [HttpDelete]
+        public IActionResult Delete([FromODataUri] int id)
+        {
+            var products = _dbContext.Products.Find(id);
+            if (products == null)
+                return NotFound("No products associated with key found");
+
+            _dbContext.Remove(products);
+            _dbContext.SaveChanges();
+
+            return NoContent(); // <!-- Best Practices -->
         }
     }
 }
