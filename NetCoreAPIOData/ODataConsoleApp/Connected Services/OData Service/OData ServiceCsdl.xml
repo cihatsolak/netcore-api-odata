@@ -1,0 +1,74 @@
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="OData.API.Models" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Category">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" />
+        <NavigationProperty Name="Products" Type="Collection(OData.API.Models.Product)" />
+      </EntityType>
+      <EntityType Name="Product">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="Stock" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Price" Type="Edm.Int32" Nullable="false" />
+        <Property Name="CreatedOn" Type="Edm.DateTimeOffset" />
+        <Property Name="CategoryId" Type="Edm.Int32" />
+        <NavigationProperty Name="Category" Type="OData.API.Models.Category">
+          <ReferentialConstraint Property="CategoryId" ReferencedProperty="Id" />
+        </NavigationProperty>
+      </EntityType>
+    </Schema>
+    <Schema Namespace="OData.API.Models.DataTransferObjects" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <ComplexType Name="LoginDto">
+        <Property Name="Email" Type="Edm.String" />
+        <Property Name="Password" Type="Edm.String" />
+      </ComplexType>
+    </Schema>
+    <Schema Namespace="Default" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <Action Name="totalproductprice" IsBound="true">
+        <Parameter Name="bindingParameter" Type="OData.API.Models.Category" />
+        <ReturnType Type="Edm.Int32" Nullable="false" />
+      </Action>
+      <Action Name="TotalProductPriceWithParameter" IsBound="true">
+        <Parameter Name="bindingParameter" Type="Collection(OData.API.Models.Category)" />
+        <Parameter Name="categoryId" Type="Edm.Int32" Nullable="false" />
+        <Parameter Name="minimumStock" Type="Edm.Int32" Nullable="false" />
+        <ReturnType Type="Edm.Int32" Nullable="false" />
+      </Action>
+      <Action Name="Login" IsBound="true">
+        <Parameter Name="bindingParameter" Type="Collection(OData.API.Models.Product)" />
+        <Parameter Name="LoginModel" Type="OData.API.Models.DataTransferObjects.LoginDto" />
+        <ReturnType Type="Edm.String" />
+      </Action>
+      <Function Name="CategoryCount" IsBound="true">
+        <Parameter Name="bindingParameter" Type="Collection(OData.API.Models.Category)" />
+        <ReturnType Type="Edm.Int32" Nullable="false" />
+      </Function>
+      <Function Name="Multiple" IsBound="true">
+        <Parameter Name="bindingParameter" Type="Collection(OData.API.Models.Product)" />
+        <Parameter Name="parameter1" Type="Edm.Int32" Nullable="false" />
+        <Parameter Name="parameter2" Type="Edm.Int32" Nullable="false" />
+        <Parameter Name="parameter3" Type="Edm.Int32" Nullable="false" />
+        <ReturnType Type="Edm.Int32" Nullable="false" />
+      </Function>
+      <Function Name="GetKdv">
+        <ReturnType Type="Edm.Int32" Nullable="false" />
+      </Function>
+      <EntityContainer Name="Container">
+        <EntitySet Name="Categories" EntityType="OData.API.Models.Category">
+          <NavigationPropertyBinding Path="Products" Target="Products" />
+        </EntitySet>
+        <EntitySet Name="Products" EntityType="OData.API.Models.Product">
+          <NavigationPropertyBinding Path="Category" Target="Categories" />
+        </EntitySet>
+        <FunctionImport Name="GetKdv" Function="Default.GetKdv" IncludeInServiceDocument="true" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
