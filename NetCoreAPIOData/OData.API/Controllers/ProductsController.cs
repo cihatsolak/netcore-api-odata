@@ -4,6 +4,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OData.API.Models;
+using OData.API.Models.DataTransferObjects;
 using System.Linq;
 
 namespace OData.API.Controllers
@@ -84,6 +85,31 @@ namespace OData.API.Controllers
             _dbContext.SaveChanges();
 
             return NoContent(); // <!-- Best Practices -->
+        }
+
+        [HttpPost]
+        public IActionResult Login(ODataActionParameters parameters)
+        {
+            LoginDto login = parameters["LoginModel"] as LoginDto;
+            if (login == null)
+                return NotFound();
+
+            return Ok($"Email: {login.Email} - Password: {login.Password}");
+        }
+
+        /// <summary>
+        /// Parametreleri function
+        /// </summary>
+        /// <param name="parameter1"></param>
+        /// <param name="parameter2"></param>
+        /// <param name="parameter3"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult Multiple([FromODataUri]int parameter1, [FromODataUri] int parameter2, [FromODataUri] int parameter3)
+        {
+            int result = parameter1 * parameter2 * parameter3;
+
+            return Ok($"Multiple result: {result}");
         }
     }
 }
