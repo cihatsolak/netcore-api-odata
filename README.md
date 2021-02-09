@@ -1,2 +1,2 @@
-# netcore-api-odata
-OData (Open Data Protocol)
+# Open Data Protocol 
+- https://www.odata.org/
