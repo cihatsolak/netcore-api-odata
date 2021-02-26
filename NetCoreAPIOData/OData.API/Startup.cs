@@ -38,6 +38,8 @@ namespace OData.API
         {
             var builder = new ODataConventionModelBuilder();
 
+            //Hangi entity ile çalýþmak istiyorsak aþaðýdaki gibi tanýmlama yapýlmalýdýr.
+            //Odata entity'e  [EntitySetName]Controller olarak eriþim yaptýðý için Controller adý olarak ne verdiyeseniz EntitySet içeriðine de böyle bir isimlendirme yapmalýsýnýz.
             //builder.EntitySet<EntityName>("ControllerName");
             //[entity set name]Controller
             builder.EntitySet<Category>("Categories");
@@ -93,7 +95,7 @@ namespace OData.API
                          .Count()
                          .Filter(); //OData'ya select, expand, orderby kullanýlacaðýný bildiriyoruz.
 
-                endpoints.MapODataRoute("odata", "odata", builder.GetEdmModel());
+                endpoints.MapODataRoute("ODataRoute", "odata", builder.GetEdmModel());
                 endpoints.MapControllers();
             });
         }
