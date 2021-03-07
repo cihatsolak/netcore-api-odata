@@ -8,7 +8,7 @@ OData (Open Data Protocol) is an ISO/IEC approved, OASIS standard that defines a
 
 OData RESTful APIs are easy to consume. The OData metadata, a machine-readable description of the data model of the APIs, enables the creation of powerful generic client proxies and tools.
 
-#### Uploaded Packages (OData.API)
+#### Installed Packages (OData.API)
  * Microsoft.AspNetCore.OData
  * Microsoft.EntityFrameworkCore
  * Microsoft.EntityFrameworkCore.SqlServer
